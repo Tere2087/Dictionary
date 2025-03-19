@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario Personal</title>
+    <style>
+        /* Agregar un poco de estilo para hacer la interfaz más bonita */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .delete-link {
+            color: red;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .delete-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mi Glosario Personal</h1>
+
+    <!-- Formulario de búsqueda -->
+    <div class="search-box">
+        <form action="/" method="POST">
+            <input type="text" name="search" placeholder="Buscar término..." value="{{ request.form.get('search') }}">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <h2>Agregar Término</h2>
+    <form action="/agregar" method="POST">
+        <label for="palabra">Término:</label>
+        <input type="text" id="palabra" name="palabra" required>
+        <label for="definicion">Definición:</label>
+        <textarea id="definicion" name="definicion" required></textarea>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <h2>Mis Términos</h2>
+    <ul class="terms-list">
+        {% for term in terms %}
+        <li>
+            <div>
+                <strong>{{ term['term'] }}</strong>: {{ term['definition'] }}
+            </div>
+            <a href="/eliminar/{{ term['term'] }}" class="delete-link">Eliminar</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <footer>
+        <p>© 2025 Mi Glosario Personal by TeCaHerDev. Todos los derechos reservados.</p>
+    </footer>
+</div>
+
+</body>
+</html>
