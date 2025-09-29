@@ -1,0 +1,48 @@
+# Imagen base con servidor X, VNC y web UI noVNC ya integrados
+FROM jlesage/baseimage-gui:alpine-3.20
+
+# Variables de entorno de jlesage para el tamaño de pantalla del contenedor (ajústalo si quieres)
+ENV DISPLAY_WIDTH=1280 \
+    DISPLAY_HEIGHT=800 \
+    USER_ID=1000 \
+    GROUP_ID=1000 \
+    TZ=Europe/Madrid
+
+# Paquetes del sistema: Python3, pip y utilidades
+RUN apk add --no-cache \
+      python3 py3-pip py3-virtualenv \
+      bash curl git \
+      # fuentes básicas (para que Tk no falle y para GUI)
+      font-dejavu ttf-dejavu \
+      # audio opcional: reproductor (no todos los navegadores/sistemas lo soportarán en contenedor)
+      mpg123 \
+    && python3 -m venv /opt/venv \
+    && . /opt/venv/bin/activate \
+    && pip install --upgrade pip
+
+# Copiamos el proyecto a /config (directorio persistente en esta base)
+# /config es donde jlesage recomienda guardar datos. También lo usamos como WORKDIR
+WORKDIR /config
+COPY requirements.txt /config/requirements.txt
+
+RUN . /opt/venv/bin/activate && pip install --no-cache-dir -r /config/requirements.txt
+
+# Descarga de datos NLTK necesarios en build (para evitar descargarlos en runtime)
+RUN . /opt/venv/bin/activate && python - <<'PY'
+import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
+PY
+
+# Copiamos el código de la app (App.py, config.json, etc.) al mismo /config
+COPY App.py /config/App.py
+COPY config.json /config/config.json
+# Si tu proyecto tuviera más archivos (imágenes, assets…), añádelos aquí:
+# COPY assets/ /config/assets/
+
+# Comando de lanzamiento de la app (usa el intérprete del venv)
+# IMPORTANTE: jlesage lanza la GUI apuntando a lo que pongamos en /startapp.sh
+RUN printf '#!/bin/sh\n. /opt/venv/bin/activate\ncd /config\nexec python App.py\n' > /startapp.sh && \
+    chmod +x /startapp.sh
+
+# Exponen puertos 5800 (UI web noVNC) y 5900 (VNC). La imagen base ya lo hace.
