@@ -1,0 +1,6 @@
+requests
+beautifulsoup4
+ttkbootstrap
+fpdf
+gTTS
+playsound
