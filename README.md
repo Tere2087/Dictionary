@@ -7,7 +7,7 @@ Permite buscar palabras mediante scraping, almacenar definiciones en base de dat
 
 ## 💡 Motivación
 
-Proyecto personal desarrollado a partir de una necesidad real: automatizar la creación de un glosario final para una asignatura de inglés, evitando búsquedas manuales repetitivas y mejorando la organización del vocabulario.
+Proyecto personal desarrollado a partir de una necesidad real: automatizar la creación de un glosario (requisito del profesor para la asignatura de inglés en DAM), evitando búsquedas manuales repetitivas y mejorando la organización del vocabulario.
 
 ---
 
